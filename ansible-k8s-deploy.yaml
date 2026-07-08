@@ -1,0 +1,13 @@
+---
+- name: Deploy BookMyShow to EKS
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Update kubeconfig
+      shell: aws eks update-kubeconfig --name kastro-eks --region us-east-1
+    - name: Apply deployment and service
+      shell: |
+        kubectl apply -f deployment.yml
+        kubectl apply -f service.yml
+    - name: Wait for rollout
+      shell: kubectl rollout status deployment/bookmyshow-deployment --timeout=300s
